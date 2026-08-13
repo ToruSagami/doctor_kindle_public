@@ -1,0 +1,46 @@
+name: Create release ZIP
+
+on:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - name: Create release ZIP
+        shell: bash
+        run: |
+          mkdir -p release
+
+          git archive \
+            --format=zip \
+            --prefix=kindle-publishing-toolkit/ \
+            --output=release/kindle-publishing-toolkit.zip \
+            "${GITHUB_SHA}"
+
+          cd release
+          sha256sum kindle-publishing-toolkit.zip \
+            > kindle-publishing-toolkit.zip.sha256
+
+      - name: Create GitHub Release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          gh release create "${GITHUB_REF_NAME}" \
+            release/kindle-publishing-toolkit.zip \
+            release/kindle-publishing-toolkit.zip.sha256 \
+            --title "${GITHUB_REF_NAME}" \
+            --generate-notes \
+            --verify-tag

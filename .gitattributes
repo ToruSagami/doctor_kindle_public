@@ -1,0 +1,19 @@
+* text=auto
+
+*.ps1 text eol=crlf
+*.md text eol=lf
+*.yaml text eol=lf
+*.yml text eol=lf
+*.json text eol=lf
+*.lua text eol=lf
+*.tex text eol=lf
+
+*.png binary
+*.pdf binary
+*.epub binary
+*.docx binary
+*.zip binary
+
+/.github export-ignore
+/.gitignore export-ignore
+/.gitattributes export-ignore

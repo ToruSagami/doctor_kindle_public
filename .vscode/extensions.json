@@ -1,0 +1,14 @@
+{
+  "recommendations": [
+    "ms-vscode.PowerShell",
+    "yzhang.markdown-all-in-one",
+    "DavidAnson.vscode-markdownlint",
+    "bierner.markdown-mermaid",
+    "redhat.vscode-yaml",
+    "8amjp.charactercount",
+    "MS-CEINTL.vscode-language-pack-ja",
+    "bpruitt-goddard.mermaid-markdown-syntax-highlighting",
+    "tomoki1207.pdf",
+    "mosapride.zenkaku"
+  ]
+}

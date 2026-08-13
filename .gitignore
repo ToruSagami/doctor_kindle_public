@@ -1,0 +1,138 @@
+# 原則としてルート直下を除外
+/*
+
+# リポジトリ管理ファイル
+!/.gitignore
+!/.gitattributes
+!/LICENSE.md
+!/LICENSE_SCOPE.md
+!/publish-plan.md
+!/README.md
+!/THIRD_PARTY_NOTICES.md
+
+# tree.txtは公開しない
+/tree.txt
+
+# VS Code
+!/.vscode/
+!/.vscode/**
+
+# GitHub Actions
+!/.github/
+!/.github/workflows/
+!/.github/workflows/release.yml
+
+# 実行例
+!/00_example/
+/00_example/*
+
+# 実行例のルートファイル
+!/00_example/LICENSE.md
+!/00_example/publish-plan.md
+
+# 原稿
+!/00_example/10_manuscript/
+!/00_example/10_manuscript/**
+
+# 自動生成される結合原稿
+/00_example/10_manuscript/99_master.md
+
+# 本文画像
+!/00_example/20_image/
+!/00_example/20_image/README.md
+
+# 図表
+!/00_example/21_figure/
+!/00_example/21_figure/README.md
+
+# 表紙
+!/00_example/30_cover/
+!/00_example/30_cover/**
+
+# Aプラスコンテンツ
+!/00_example/40_aplus/
+!/00_example/40_aplus/README.md
+
+# 設定
+!/00_example/50_config/
+!/00_example/50_config/**
+
+# スタイル
+!/00_example/60_style/
+!/00_example/60_style/**
+
+# 生成物フォルダ
+!/00_example/90_publish/
+/00_example/90_publish/*
+!/00_example/90_publish/README.md
+
+# 作業フォルダ
+!/00_example/98_work/
+/00_example/98_work/*
+!/00_example/98_work/README.md
+
+!/00_example/99_archive/
+/00_example/99_archive/*
+!/00_example/99_archive/README.md
+
+# テンプレート
+!/70_template/
+!/70_template/**
+
+# 公開スクリプト
+!/77_script/
+!/77_script/**
+
+# 旧版スクリプト
+/77_script/obsolete/
+
+# 作業フォルダ
+!/98_work/
+/98_work/*
+!/98_work/README.md
+
+# ルート直下の旧版保管場所
+!/99_archive/
+/99_archive/*
+!/99_archive/README.md
+
+
+# 非公開スクリプト
+/copy-ps1.ps1
+
+# OSが作るファイル
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# エディターが作るファイル
+.idea/
+*.swp
+*.tmp
+*.bak
+
+# Officeの一時ファイル
+~$*.docx
+~$*.xlsx
+
+# 秘密情報
+.env
+.env.*
+secrets/
+credentials/
+
+# 一時フォルダ
+temp/
+tmp/
+cache/
+
+# ログ
+*.log
+
+# LaTeXの中間ファイル
+*.aux
+*.fdb_latexmk
+*.fls
+*.synctex.gz
+*.toc
+

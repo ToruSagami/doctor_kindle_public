@@ -1,0 +1,17 @@
+title: "ここに主題を書きます"
+subtitle: "これが副題になります"
+author:
+  - "ここに著者名を記入します"
+date: "2026-08-31"
+lang: "ja-JP"
+rights: "Copyright © 著者名"
+
+colophon:
+  enabled: true
+  edition: "初版"
+  printing: "第1刷"
+  publisher: ""
+  publisher_person: ""
+  contact: ""
+  copyright_year: 2026
+  copyright_holder: "著者名"

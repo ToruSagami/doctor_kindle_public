@@ -1,0 +1,6 @@
+from: markdown
+to: docx
+standalone: true
+toc: true
+toc-depth: 2
+metadata-file: 50_config/metadata.yaml

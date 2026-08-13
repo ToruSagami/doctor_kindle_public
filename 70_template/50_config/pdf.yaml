@@ -1,0 +1,29 @@
+from: markdown
+to: pdf
+standalone: true
+toc: true
+toc-depth: 2
+top-level-division: chapter
+pdf-engine: lualatex
+metadata-file: 50_config/metadata.yaml
+include-in-header:
+  - 60_style/pdf-header.tex
+
+variables:
+  documentclass: ltjsbook
+  classoption:
+    - a4paper
+    - 12pt
+    - openany
+
+  geometry:
+    - top=23mm
+    - bottom=19mm
+    - left=23mm
+    - right=23mm
+
+  CJKmainfont: Yu Mincho
+  CJKsansfont: Yu Gothic
+  CJKmonofont: MS Gothic
+
+  linestretch: 1.00

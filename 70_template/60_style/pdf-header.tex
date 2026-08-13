@@ -1,0 +1,213 @@
+\usepackage{needspace}
+\usepackage{caption}
+\usepackage{chngcntr}
+\usepackage{xcolor}
+\usepackage{framed}
+\usepackage{fvextra}
+
+% A4技術書向けの本文段落設定。
+% 段落頭は字下げせず、段落間は0.3emだけ空ける。
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{0.3em}
+
+% PDFに残るコードフェンスは薄いグレー背景と外枠を付ける。
+% powershell, text, yaml, markdown, json, html, css, javascript, python, latex, r を含む。
+% mermaidは既存処理で図へ変換されるため、通常はコードブロックとしてPDFへ残らない。
+\definecolor{bookcodebackground}{RGB}{245,245,245}
+\definecolor{bookcodeborder}{RGB}{153,153,153}
+% Verbatim行はベースライン基準のため、見た目に合わせて上下を個別補正する。
+% 上側は従来の3pt補正を維持し、下側だけ0.75pt詰めて2.25ptとする。
+\newlength{\bookcodetopadjust}
+\newlength{\bookcodebottomadjust}
+\setlength{\bookcodetopadjust}{3pt}
+\setlength{\bookcodebottomadjust}{2.25pt}
+\newenvironment{bookcodeblock}{%
+  \def\FrameCommand{%
+    \fboxsep=6pt\fboxrule=0.6pt\fcolorbox{bookcodeborder}{bookcodebackground}%
+  }%
+  \MakeFramed{\advance\hsize-\width\FrameRestore}%
+  \vspace*{-\bookcodetopadjust}%
+}{%
+  \vspace*{\bookcodebottomadjust}%
+  \endMakeFramed
+}
+
+% 図番号は章をまたいで連番とし、キャプションは図の下へ置く。
+% 文字サイズは本文と同じ大きさにする。
+\counterwithout{figure}{chapter}
+\renewcommand{\thefigure}{\arabic{figure}}
+\captionsetup[figure]{
+  name=図,
+  position=bottom,
+  font=normalsize,
+  labelfont=bf,
+  labelsep=space
+}
+
+% 表番号も章をまたいで連番とし、キャプションは表の上へ置く。
+% 「表1」のように名称と番号の間を空けずに表示する。
+\counterwithout{table}{chapter}
+\renewcommand{\thetable}{\arabic{table}}
+\DeclareCaptionLabelFormat{booktable}{#1#2}
+\captionsetup[table]{
+  name=表,
+  position=top,
+  font=normalsize,
+  labelfont=bf,
+  labelformat=booktable,
+  labelsep=space
+}
+
+% 3列以上の表で使用するデータ行区切りの色。
+% 紙面を重くしないよう、かなり淡いグレーとする。
+\definecolor{booktablerule}{RGB}{210,210,210}
+
+% Markdownの > による引用を、コードとは区別した淡い引用ボックスにする。
+\definecolor{bookquotebackground}{RGB}{250,250,250}
+\definecolor{bookquoteborder}{RGB}{180,180,180}
+\newenvironment{bookquoteblock}{%
+  \def\FrameCommand{%
+    \fboxsep=8pt\fboxrule=0.6pt\fcolorbox{bookquoteborder}{bookquotebackground}%
+  }%
+  \MakeFramed{\advance\hsize-\width\FrameRestore}%
+}{%
+  \endMakeFramed
+}
+
+\makeatletter
+
+% 目次では柱とページ番号を表示しない
+\newif\ifbooktoc
+\booktocfalse
+
+\def\ps@bookfront{%
+  \let\@mkboth\@gobbletwo
+  \let\@oddhead\@empty
+  \let\@evenhead\@empty
+  \let\@oddfoot\@empty
+  \let\@evenfoot\@empty
+}
+
+% 章開始ページ専用の柱
+% 奇数ページは見出しを左、ページ番号を右に置く
+% 偶数ページはページ番号を左、見出しを右に置く
+\newcommand{\bookchaptertitle}{}
+\def\ps@bookchapter{%
+  \let\@mkboth\@gobbletwo
+  \def\@oddhead{%
+    \vbox{%
+      \hbox to\textwidth{\bookchaptertitle\hfil\thepage}%
+      \vskip 2pt
+      \hrule
+    }%
+  }%
+  \def\@evenhead{%
+    \vbox{%
+      \hbox to\textwidth{\thepage\hfil\bookchaptertitle}%
+      \vskip 2pt
+      \hrule
+    }%
+  }%
+  \let\@oddfoot\@empty
+  \let\@evenfoot\@empty
+}
+
+% タイトルページは書名、副題、著者名だけを表示する。
+% 発行日と著作権表示は奥付へ集約する。
+
+\renewcommand{\@makechapterhead}[1]{%
+  \markboth{第\thechapter 章\space #1}{第\thechapter 章\space #1}%
+  \gdef\bookchaptertitle{第\thechapter 章\space #1}%
+  \thispagestyle{bookchapter}%
+  \vspace*{-10pt}%
+  {\parindent \z@ \raggedright
+    \normalfont\sffamily\bfseries\Large
+    第\thechapter 章\quad #1\par\nobreak
+    \vskip 24pt
+  }%
+}
+
+\renewcommand{\@makeschapterhead}[1]{%
+  \ifbooktoc
+    \thispagestyle{bookfront}%
+  \else
+    \markboth{#1}{#1}%
+    \markright{#1}%
+    \gdef\bookchaptertitle{#1}%
+    \thispagestyle{bookchapter}%
+  \fi
+  \vspace*{-10pt}%
+  {\parindent \z@ \raggedright
+    \normalfont\sffamily\bfseries\Large #1\par\nobreak
+    \vskip 24pt
+  }%
+}
+
+\AtBeginDocument{%
+  % MarkdownのBlockQuote（>）を引用ボックスへ変換する。
+  \renewenvironment{quote}{\begin{bookquoteblock}}{\end{bookquoteblock}}%
+  \renewenvironment{quotation}{\begin{bookquoteblock}}{\end{bookquoteblock}}%
+
+  % コードブロックの長い行は右端で自動改行する。
+  % breakanywhere=true により、空白のない長い文字列も枠内で折り返す。
+  % listparameters で Verbatim が持つ上下の余白を消し、
+  % 外枠側の fboxsep=6pt だけを残して天地方向の余白を揃える。
+  \RecustomVerbatimEnvironment{verbatim}{Verbatim}{%
+    breaklines=true,
+    breakanywhere=true,
+    breaksymbolleft={},
+    breaksymbolright={},
+    listparameters={\setlength{\topsep}{0pt}\setlength{\partopsep}{0pt}\setlength{\parsep}{0pt}},
+    frame=single,
+    framesep=6pt,
+    framerule=0.6pt,
+    rulecolor=\color{bookcodeborder},
+    fillcolor=\color{bookcodebackground}
+  }%
+  % Pandocのシンタックスハイライト付きコードも同じ折り返し規則を使う。
+  % commandchars はPandocの色付け用マクロを有効にするため維持する。
+  \@ifundefined{Highlighting}{}{%
+    \RecustomVerbatimEnvironment{Highlighting}{Verbatim}{%
+      commandchars=\\\{\},
+      breaklines=true,
+      breakanywhere=true,
+      breaksymbolleft={},
+      breaksymbolright={},
+      listparameters={\setlength{\topsep}{0pt}\setlength{\partopsep}{0pt}\setlength{\parsep}{0pt}}
+    }%
+  }%
+  % シンタックスハイライト付きコードフェンスの外観を統一する。
+  \@ifundefined{Shaded}{}{%
+    \renewenvironment{Shaded}{\begin{bookcodeblock}}{\end{bookcodeblock}}%
+  }%
+  % 章開始ページのplainを、その時点のheadingsへ動的に接続する
+  \def\ps@plain{\ps@headings}%
+  % 目次だけは柱を消し、終了後に通常のheadingsへ戻す
+  \let\bookoriginaltableofcontents\tableofcontents
+  \renewcommand{\tableofcontents}{%
+    \clearpage
+    \booktoctrue
+    \pagestyle{bookfront}%
+    \thispagestyle{bookfront}%
+    \let\ps@plain\ps@bookfront
+    \bookoriginaltableofcontents
+    \clearpage
+    \booktocfalse
+    \def\ps@plain{\ps@headings}%
+    \pagestyle{headings}%
+  }%
+  % 図キャプションの名称、位置、文字サイズはcaptionパッケージで統一する
+  \hypersetup{pdfpagemode=UseNone,pdfpagelayout=SinglePage}
+  \pdfextension catalog{/PageMode /UseNone}
+  \let\originalmaketitle\maketitle
+  \renewcommand{\maketitle}{%
+    \begingroup
+      % dateメタデータは奥付で使用するが、タイトルページには表示しない
+      \let\@date\@empty
+      {\sffamily\originalmaketitle}%
+    \endgroup
+    \clearpage
+  }%
+}
+
+\makeatother
