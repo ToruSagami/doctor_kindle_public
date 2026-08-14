@@ -1,8 +1,31 @@
-# Kindle出版制作キット
+# Kindle出版ツールキット
 
-Markdown原稿からEPUB、PDF、DOCXを生成するためのPowerShellスクリプト、設定ファイル、スタイル、原稿テンプレートをまとめた公開リポジトリです。
+Markdown原稿からEPUB、PDF、DOCXを生成するためのPowerShellスクリプト、設定ファイル、スタイル、原稿テンプレートをまとめた制作キットの公開リポジトリです。
 
 WindowsとVisual Studio Codeを使い、執筆環境の準備から原稿の結合、各形式への変換、ペーパーバック表紙の生成までを一つのフォルダで管理できます。
+
+# 利用方法
+
+## ツールキットを入手する
+
+Gitを利用できる場合は、次のコマンドでリポジトリを取得してください。
+
+```powershell
+git clone https://github.com/ToruSagami/doctor_kindle_public.git
+cd doctor_kindle_public
+```
+
+Gitで取得すると、公開後の修正や更新を`git pull`で反映できます。
+
+```powershell
+git pull
+```
+
+Gitを利用しない場合は、次のリンクから最新版のZIPファイルをダウンロードしてください。
+
+[最新版Kindle出版ツールキットダウンロード](https://github.com/ToruSagami/doctor_kindle_public/releases/latest/download/kindle-publishing-toolkit.zip)
+
+ダウンロード後、ZIPファイルを任意のフォルダへ展開して使用します。
 
 ## 収録内容
 
@@ -37,7 +60,19 @@ doctor_kindle_public/
 
 `00_example`は動作確認用の実行例です。`70_template`は新しい出版プロジェクトへ展開する原本です。`77_script`には実行用スクリプトを収録しています。
 
-## 必要な環境
+## PowerShellスクリプトのブロックを解除する
+
+ブラウザからZIPファイルをダウンロードした場合、WindowsによってPowerShellスクリプトの実行がブロックされることがあります。
+
+ZIPを展開したフォルダをPowerShellで開き、次のコマンドを実行してください。
+
+```powershell
+Get-ChildItem -Path .\77_script -Filter *.ps1 -File | Unblock-File
+```
+
+この操作は`77_script`に収録されたPowerShellスクリプトだけを対象にします。`git clone`でリポジトリを取得した場合、通常はこの操作は必要ありません。ブラウザからZIPファイルをダウンロードして展開した場合に実行してください。
+
+## 初回設定：必要な環境を整える
 
 基本環境はWindowsとPowerShell 7です。生成する形式に応じて、Pandoc、MiKTeX、ImageMagick、Node.js、Mermaid CLIなどを使用します。
 
@@ -53,7 +88,7 @@ doctor_kindle_public/
 .\77_script\setup_windows.ps1 all
 ```
 
-## 最初の動作確認
+## 最初に動作確認をする
 
 まず、実行例の設定と外部コマンドを確認します。
 
