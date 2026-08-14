@@ -13,7 +13,7 @@ param(
 
 Set-StrictMode -Version Latest
 $ErrorActionPreference = "Stop"
-$BookScriptVersion = "0.7.0"
+$BookScriptVersion = "0.7.2"
 
 # スクリプトは77_scriptへ置き、その親フォルダを配布元ルートとして扱う。
 # ProjectRootを省略した場合は、従来どおり配布元ルートを生成対象にする。
@@ -2178,14 +2178,21 @@ function Invoke-PandocExport {
 
     Write-Info ("{0}を生成しています。" -f $Format)
 
-    & pandoc @arguments 2>&1 |
-        ForEach-Object {
-            Write-ExternalCommandOutput `
-                -CommandName "pandoc" `
-                -Message ([string]$_)
-        }
+    Push-Location -LiteralPath $ProjectRoot
 
-    $pandocExitCode = $LASTEXITCODE
+    try {
+        & pandoc @arguments 2>&1 |
+            ForEach-Object {
+                Write-ExternalCommandOutput `
+                    -CommandName "pandoc" `
+                    -Message ([string]$_)
+            }
+
+        $pandocExitCode = $LASTEXITCODE
+    }
+    finally {
+        Pop-Location
+    }
 
     if ($pandocExitCode -ne 0) {
         throw (
