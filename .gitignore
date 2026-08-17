@@ -136,3 +136,4 @@ cache/
 *.synctex.gz
 *.toc
 
+00_example/50_config/sync.ffs_db

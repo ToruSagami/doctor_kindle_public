@@ -4,36 +4,47 @@
 \usepackage{xcolor}
 \usepackage{framed}
 \usepackage{fvextra}
+\usepackage{etoolbox}
+
+% 本文段落の孤立行を抑止する。
+% 前ページへ無理に押し込まず、必要な行をまとめて次ページへ送る。
+\widowpenalty=10000
+\clubpenalty=10000
+\displaywidowpenalty=10000
 
 % A4技術書向けの本文段落設定。
-% 段落頭は字下げせず、段落間は0.3emだけ空ける。
+% 段落頭は字下げせず、段落間は0.3emから1px相当の0.75ptを差し引く。
 \setlength{\parindent}{0pt}
-\setlength{\parskip}{0.3em}
+\setlength{\parskip}{\dimexpr0.3em-0.75pt\relax}
 
 % PDFに残るコードフェンスは薄いグレー背景と外枠を付ける。
-% powershell, text, yaml, markdown, json, html, css, javascript, python, latex, r を含む。
-% mermaidは既存処理で図へ変換されるため、通常はコードブロックとしてPDFへ残らない。
 \definecolor{bookcodebackground}{RGB}{245,245,245}
 \definecolor{bookcodeborder}{RGB}{153,153,153}
+
+% コードブロックは、枠と本文を含めて最低4行分の空きがある位置から始める。
+% 長いコードブロックのページ分割は許可する。
+\newcommand{\bookcodeneedspace}{\Needspace{4\baselineskip}}
+
 % Verbatim行はベースライン基準のため、見た目に合わせて上下を個別補正する。
-% 上側は従来の3pt補正を維持し、下側だけ0.75pt詰めて2.25ptとする。
 \newlength{\bookcodetopadjust}
 \newlength{\bookcodebottomadjust}
 \setlength{\bookcodetopadjust}{3pt}
 \setlength{\bookcodebottomadjust}{2.25pt}
 \newenvironment{bookcodeblock}{%
+  \bookcodeneedspace
   \def\FrameCommand{%
     \fboxsep=6pt\fboxrule=0.6pt\fcolorbox{bookcodeborder}{bookcodebackground}%
   }%
   \MakeFramed{\advance\hsize-\width\FrameRestore}%
   \vspace*{-\bookcodetopadjust}%
 }{%
+  % 最後のコード行と下枠の間では改ページしない。
+  \par\nobreak
   \vspace*{\bookcodebottomadjust}%
   \endMakeFramed
 }
 
 % 図番号は章をまたいで連番とし、キャプションは図の下へ置く。
-% 文字サイズは本文と同じ大きさにする。
 \counterwithout{figure}{chapter}
 \renewcommand{\thefigure}{\arabic{figure}}
 \captionsetup[figure]{
@@ -45,7 +56,6 @@
 }
 
 % 表番号も章をまたいで連番とし、キャプションは表の上へ置く。
-% 「表1」のように名称と番号の間を空けずに表示する。
 \counterwithout{table}{chapter}
 \renewcommand{\thetable}{\arabic{table}}
 \DeclareCaptionLabelFormat{booktable}{#1#2}
@@ -59,10 +69,9 @@
 }
 
 % 3列以上の表で使用するデータ行区切りの色。
-% 紙面を重くしないよう、かなり淡いグレーとする。
 \definecolor{booktablerule}{RGB}{210,210,210}
 
-% Markdownの > による引用を、コードとは区別した淡い引用ボックスにする。
+% Markdownの引用を、コードとは区別した淡い引用ボックスにする。
 \definecolor{bookquotebackground}{RGB}{250,250,250}
 \definecolor{bookquoteborder}{RGB}{180,180,180}
 \newenvironment{bookquoteblock}{%
@@ -76,7 +85,7 @@
 
 \makeatletter
 
-% 目次では柱とページ番号を表示しない
+% 目次では柱とページ番号を表示しない。
 \newif\ifbooktoc
 \booktocfalse
 
@@ -88,9 +97,7 @@
   \let\@evenfoot\@empty
 }
 
-% 章開始ページ専用の柱
-% 奇数ページは見出しを左、ページ番号を右に置く
-% 偶数ページはページ番号を左、見出しを右に置く
+% 章開始ページ専用の柱。
 \newcommand{\bookchaptertitle}{}
 \def\ps@bookchapter{%
   \let\@mkboth\@gobbletwo
@@ -113,7 +120,7 @@
 }
 
 % タイトルページは書名、副題、著者名だけを表示する。
-% 発行日と著作権表示は奥付へ集約する。
+% 発行日は奥付へ集約する。
 
 \renewcommand{\@makechapterhead}[1]{%
   \markboth{第\thechapter 章\space #1}{第\thechapter 章\space #1}%
@@ -144,14 +151,11 @@
 }
 
 \AtBeginDocument{%
-  % MarkdownのBlockQuote（>）を引用ボックスへ変換する。
+  % Markdownの引用を引用ボックスへ変換する。
   \renewenvironment{quote}{\begin{bookquoteblock}}{\end{bookquoteblock}}%
   \renewenvironment{quotation}{\begin{bookquoteblock}}{\end{bookquoteblock}}%
 
-  % コードブロックの長い行は右端で自動改行する。
-  % breakanywhere=true により、空白のない長い文字列も枠内で折り返す。
-  % listparameters で Verbatim が持つ上下の余白を消し、
-  % 外枠側の fboxsep=6pt だけを残して天地方向の余白を揃える。
+  % 言語指定のないコードフェンスも枠内で折り返す。
   \RecustomVerbatimEnvironment{verbatim}{Verbatim}{%
     breaklines=true,
     breakanywhere=true,
@@ -164,8 +168,9 @@
     rulecolor=\color{bookcodeborder},
     fillcolor=\color{bookcodebackground}
   }%
+  \BeforeBeginEnvironment{verbatim}{\bookcodeneedspace}%
+
   % Pandocのシンタックスハイライト付きコードも同じ折り返し規則を使う。
-  % commandchars はPandocの色付け用マクロを有効にするため維持する。
   \@ifundefined{Highlighting}{}{%
     \RecustomVerbatimEnvironment{Highlighting}{Verbatim}{%
       commandchars=\\\{\},
@@ -176,13 +181,14 @@
       listparameters={\setlength{\topsep}{0pt}\setlength{\partopsep}{0pt}\setlength{\parsep}{0pt}}
     }%
   }%
-  % シンタックスハイライト付きコードフェンスの外観を統一する。
   \@ifundefined{Shaded}{}{%
     \renewenvironment{Shaded}{\begin{bookcodeblock}}{\end{bookcodeblock}}%
   }%
-  % 章開始ページのplainを、その時点のheadingsへ動的に接続する
+
+  % 章開始ページのplainを、その時点のheadingsへ動的に接続する。
   \def\ps@plain{\ps@headings}%
-  % 目次だけは柱を消し、終了後に通常のheadingsへ戻す
+
+  % 目次だけは柱とページ番号を消し、終了後に通常のheadingsへ戻す。
   \let\bookoriginaltableofcontents\tableofcontents
   \renewcommand{\tableofcontents}{%
     \clearpage
@@ -196,13 +202,14 @@
     \def\ps@plain{\ps@headings}%
     \pagestyle{headings}%
   }%
-  % 図キャプションの名称、位置、文字サイズはcaptionパッケージで統一する
+
   \hypersetup{pdfpagemode=UseNone,pdfpagelayout=SinglePage}
-  \pdfextension catalog{/PageMode /UseNone}
+  \ifdefined\pdfextension
+    \pdfextension catalog{/PageMode /UseNone}
+  \fi
   \let\originalmaketitle\maketitle
   \renewcommand{\maketitle}{%
     \begingroup
-      % dateメタデータは奥付で使用するが、タイトルページには表示しない
       \let\@date\@empty
       {\sffamily\originalmaketitle}%
     \endgroup
