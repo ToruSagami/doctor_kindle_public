@@ -138,3 +138,5 @@ cache/
 
 00_example/50_config/sync.ffs_db
 77_script/book_0.7.5.ps1
+
+77_script\sync.ffs_db
