@@ -137,3 +137,4 @@ cache/
 *.toc
 
 00_example/50_config/sync.ffs_db
+77_script/book_0.7.5.ps1

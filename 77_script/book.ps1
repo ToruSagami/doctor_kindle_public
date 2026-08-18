@@ -13,7 +13,7 @@ param(
 
 Set-StrictMode -Version Latest
 $ErrorActionPreference = "Stop"
-$BookScriptVersion = "0.7.2"
+$BookScriptVersion = "0.7.5"
 
 # スクリプトは77_scriptへ置き、その親フォルダを配布元ルートとして扱う。
 # ProjectRootを省略した場合は、従来どおり配布元ルートを生成対象にする。
@@ -1585,6 +1585,7 @@ function Convert-MermaidBlocksForExport {
         # 保存用.mmdには原文を残し、描画用コードからはtitleだけを除外する。
         $yamlTitle = ""
         $commentTitle = ""
+        $bookWidth = ""
         $renderLines = New-Object System.Collections.Generic.List[string]
         foreach ($blockLine in $blockLines) {
             $renderLines.Add($blockLine)
@@ -1655,6 +1656,36 @@ function Convert-MermaidBlocksForExport {
             }
         }
 
+        # PDF紙面上の個別幅はMermaidコメントで指定する。
+        # Mermaid自身の描画設定と混同しないよう、EPUBとDOCXでは使用しない。
+        $bookWidthCount = 0
+        for ($commentIndex = 0; $commentIndex -lt $blockLines.Count; $commentIndex++) {
+            $bookWidthLine = $blockLines[$commentIndex]
+            if ($bookWidthLine -notmatch '^[ \t]*%%[ \t]*book-width[ \t]*:') {
+                continue
+            }
+
+            $bookWidthCount++
+            $bookWidthMatch = [regex]::Match(
+                $bookWidthLine,
+                '^[ \t]*%%[ \t]*book-width[ \t]*:[ \t]*(?<width>[0-9]{1,3})%[ \t]*$'
+            )
+            if (-not $bookWidthMatch.Success) {
+                throw "Mermaid図$figureNumberのbook-widthが不正です。1%から100%までの割合で指定してください。例: %% book-width: 45%"
+            }
+
+            $bookWidthNumber = [int]$bookWidthMatch.Groups['width'].Value
+            if ($bookWidthNumber -lt 1 -or $bookWidthNumber -gt 100) {
+                throw "Mermaid図$figureNumberのbook-widthが範囲外です。1%から100%までで指定してください。"
+            }
+
+            $bookWidth = "{0}%" -f $bookWidthNumber
+        }
+
+        if ($bookWidthCount -gt 1) {
+            throw "Mermaid図$figureNumberにbook-widthが複数あります。指定は1件だけにしてください。"
+        }
+
         $title = if (-not [string]::IsNullOrWhiteSpace($yamlTitle)) {
             $yamlTitle
         }
@@ -1682,9 +1713,10 @@ function Convert-MermaidBlocksForExport {
         $titleForLog = if ([string]::IsNullOrWhiteSpace($title)) { "（タイトルなし）" } else { $title }
         Write-Info ("Mermaid図{0}: title={1}" -f $figureNumber, $titleForLog)
 
-        # 描画用コードから旧titleコメントも外す。その他のMermaidコメントは保持する。
+        # 描画用コードから旧titleコメントと出版用の幅指定を外す。
+        # その他のMermaidコメントは保持する。
         for ($renderIndex = $renderLines.Count - 1; $renderIndex -ge 0; $renderIndex--) {
-            if ($renderLines[$renderIndex] -match '^[ \t]*%%[ \t]*title[ \t]*:') {
+            if ($renderLines[$renderIndex] -match '^[ \t]*%%[ \t]*(title|book-width)[ \t]*:') {
                 $renderLines.RemoveAt($renderIndex)
             }
         }
@@ -1694,8 +1726,10 @@ function Convert-MermaidBlocksForExport {
             throw "タイトル情報を除くとMermaid本体が空になります。図の出現順: $figureNumber"
         }
 
-        # 0.2.9以前の画像キャッシュを誤再利用しないよう、処理仕様の世代をハッシュへ含める。
-        $hashSource = "book-mermaid-v4`n" + $mermaidText
+        # 描画に使うコードだけを画像キャッシュの判定対象にする。
+        # titleとbook-widthを変更しても図形が同じなら既存画像を再利用する。
+        # Mermaid本体やYAML configを変更した場合は新しい画像を生成する。
+        $hashSource = "book-mermaid-v5`n" + $renderText
         $hash = (Get-TextSha256 -Text $hashSource).Substring(0, 16)
         $baseName = "fig_$hash"
         Write-Info ("Mermaid図{0}: asset={1}" -f $figureNumber, $baseName)
@@ -1743,13 +1777,24 @@ function Convert-MermaidBlocksForExport {
             Convert-ToMarkdownCaption -Text ("図{0} {1}" -f $figureNumber, $title)
         }
 
-        # Mermaid図だけに表示サイズの上限を設定する。
-        # PDFでは本文幅と本文高さの両方を制限し、縦横比はPandoc側で維持する。
-        # EPUBとDOCXでは高さ指定を避け、幅75%だけを指定して互換性を優先する。
+        # Mermaid図だけに表示幅を設定する。
+        # PDFではbook-widthがあれば個別幅、なければ標準幅75%を使用する。
+        # EPUBとDOCXではbook-widthを無視し、幅75%だけを指定する。
         $imageAttributes = if ($Format -eq "pdf") {
-            "#fig-{0} width=0.75\textwidth height=0.65\textheight" -f $hash
+            $pdfImageWidth = if ([string]::IsNullOrWhiteSpace($bookWidth)) {
+                "75%"
+            }
+            else {
+                $bookWidth
+            }
+
+            Write-Info ("Mermaid図{0}: PDF表示幅={1} / 縦横比を維持" -f $figureNumber, $pdfImageWidth)
+            "#fig-{0} width={1}" -f $hash, $pdfImageWidth
         }
         else {
+            if (-not [string]::IsNullOrWhiteSpace($bookWidth)) {
+                Write-Info ("Mermaid図{0}: book-width={1}は{2}では使用せず、標準幅75%を適用します。" -f $figureNumber, $bookWidth, $Format)
+            }
             "#fig-{0} width=75%" -f $hash
         }
 
@@ -2143,6 +2188,7 @@ function Invoke-PandocExport {
 
     $outputFile = Join-Path $PublishDir "$OutputBaseName.$Format"
     $defaultsFile = Join-Path $ConfigDir "$Format.yaml"
+    $aspectRatioHeaderFile = Join-Path $WorkDir "book-image-aspect-ratio.tex"
 
     $brFilterFile = Join-Path $StyleDir "br.lua"
     $tableFilterFile = Join-Path $StyleDir "table.lua"
@@ -2170,8 +2216,17 @@ function Invoke-PandocExport {
     )
 
     if ($Format -eq "pdf") {
+        $utf8WithoutBom = New-Object System.Text.UTF8Encoding($false)
+        [System.IO.File]::WriteAllText(
+            $aspectRatioHeaderFile,
+            "\AtBeginDocument{\setkeys{Gin}{keepaspectratio}}`n",
+            $utf8WithoutBom
+        )
+
+        $arguments += "--include-in-header=$aspectRatioHeaderFile"
         $arguments += "--lua-filter=$tableFilterFile"
         $arguments += "--lua-filter=$colophonFilterFile"
+        Write-Info "PDF画像の縦横比維持設定を追加しました。"
     }
 
     Write-Info "70_template由来の設定ファイルを使用します: $defaultsFile"
