@@ -13,7 +13,7 @@ param(
 
 Set-StrictMode -Version Latest
 $ErrorActionPreference = "Stop"
-$BookScriptVersion = "0.7.5"
+$BookScriptVersion = "0.7.6"
 
 # スクリプトは77_scriptへ置き、その親フォルダを配布元ルートとして扱う。
 # ProjectRootを省略した場合は、従来どおり配布元ルートを生成対象にする。
@@ -225,42 +225,70 @@ function Assert-SafeProjectRoot {
 }
 
 
-function Initialize-ProjectFromTemplate {
-    Assert-SafeProjectRoot
+function Test-SameDirectoryPath {
+    param(
+        [Parameter(Mandatory = $true)]
+        [string]$FirstPath,
 
-    if (-not (Test-Path -LiteralPath $TemplateDir -PathType Container)) {
-        throw "雛形の原本が見つかりません: $TemplateDir"
+        [Parameter(Mandatory = $true)]
+        [string]$SecondPath
+    )
+
+    $firstFullPath = [System.IO.Path]::GetFullPath($FirstPath).TrimEnd([char[]]@("\", "/"))
+    $secondFullPath = [System.IO.Path]::GetFullPath($SecondPath).TrimEnd([char[]]@("\", "/"))
+
+    return [string]::Equals(
+        $firstFullPath,
+        $secondFullPath,
+        [System.StringComparison]::OrdinalIgnoreCase
+    )
+}
+
+
+function Copy-MissingDirectoryContents {
+    param(
+        [Parameter(Mandatory = $true)]
+        [string]$SourceDir,
+
+        [Parameter(Mandatory = $true)]
+        [string]$DestinationDir,
+
+        [switch]$SkipRootReadme
+    )
+
+    if (-not (Test-Path -LiteralPath $SourceDir -PathType Container)) {
+        throw "コピー元フォルダが見つかりません: $SourceDir"
     }
 
-    if (-not (Test-Path -LiteralPath $ProjectRoot -PathType Container)) {
-        New-Item -ItemType Directory -Path $ProjectRoot -Force | Out-Null
-        Write-Info "プロジェクトルートを作成しました: $ProjectRoot"
+    if (Test-SameDirectoryPath -FirstPath $SourceDir -SecondPath $DestinationDir) {
+        Write-Info "コピー元とコピー先が同じため、コピーを省略します: $SourceDir"
+        return
     }
 
-    Write-Info "70_templateから不足ファイルをコピーします。"
-    Write-Info "雛形: $TemplateDir"
-    Write-Info "コピー先: $ProjectRoot"
+    if (-not (Test-Path -LiteralPath $DestinationDir -PathType Container)) {
+        New-Item -ItemType Directory -Path $DestinationDir -Force | Out-Null
+        Write-Success "フォルダを作成しました: $DestinationDir"
+    }
 
-    $templateRootPrefix = $TemplateDir.TrimEnd([char[]]@("\", "/")) +
+    $sourcePrefix = $SourceDir.TrimEnd([char[]]@("\", "/")) +
         [System.IO.Path]::DirectorySeparatorChar
 
-    $templateItems = @(
-        Get-ChildItem -LiteralPath $TemplateDir -Force -Recurse |
+    $sourceItems = @(
+        Get-ChildItem -LiteralPath $SourceDir -Force -Recurse |
             Sort-Object -Property @(
                 @{ Expression = { if ($_.PSIsContainer) { 0 } else { 1 } } },
                 @{ Expression = { $_.FullName } }
             )
     )
 
-    foreach ($item in $templateItems) {
-        $relativePath = $item.FullName.Substring($templateRootPrefix.Length)
+    foreach ($item in $sourceItems) {
+        $relativePath = $item.FullName.Substring($sourcePrefix.Length)
 
-        # 70_template自身の説明用READMEは、生成先のルートへコピーしない。
-        if ($relativePath -eq "README.md") {
+        if ($SkipRootReadme -and $relativePath -eq "README.md") {
             continue
         }
 
-        $destination = Join-Path $ProjectRoot $relativePath
+        $destination = Join-Path $DestinationDir $relativePath
 
         if ($item.PSIsContainer) {
             if (-not (Test-Path -LiteralPath $destination -PathType Container)) {
@@ -281,10 +309,60 @@ function Initialize-ProjectFromTemplate {
         }
 
         Copy-Item -LiteralPath $item.FullName -Destination $destination
-        Write-Success "雛形をコピーしました: $destination"
+        Write-Success "ファイルをコピーしました: $destination"
+    }
+}
+
+
+function Copy-ActiveBookScript {
+    param(
+        [Parameter(Mandatory = $true)]
+        [string]$DestinationDir
+    )
+
+    if (Test-SameDirectoryPath -FirstPath $ScriptDir -SecondPath $DestinationDir) {
+        return
     }
 
-    Write-Success "プロジェクトの初期構成を確認しました。"
+    if (-not (Test-Path -LiteralPath $DestinationDir -PathType Container)) {
+        New-Item -ItemType Directory -Path $DestinationDir -Force | Out-Null
+        Write-Success "フォルダを作成しました: $DestinationDir"
+    }
+
+    $destinationBookScript = Join-Path $DestinationDir "book.ps1"
+    if (Test-Path -LiteralPath $destinationBookScript -PathType Leaf) {
+        Write-WarningMessage "既存のbook.ps1は変更しません: $destinationBookScript"
+        return
+    }
+
+    Copy-Item -LiteralPath $PSCommandPath -Destination $destinationBookScript
+    Write-Success "実行中のbook.ps1をコピーしました: $destinationBookScript"
+}
+
+
+function Initialize-ProjectFromTemplate {
+    Assert-SafeProjectRoot
+
+    if (-not (Test-Path -LiteralPath $ProjectRoot -PathType Container)) {
+        New-Item -ItemType Directory -Path $ProjectRoot -Force | Out-Null
+        Write-Info "プロジェクトルートを作成しました: $ProjectRoot"
+    }
+
+    Write-Info "70_templateから不足ファイルをコピーします。"
+    Write-Info "雛形: $TemplateDir"
+    Write-Info "コピー先: $ProjectRoot"
+    Copy-MissingDirectoryContents -SourceDir $TemplateDir -DestinationDir $ProjectRoot -SkipRootReadme
+
+    $projectTemplateDir = Join-Path $ProjectRoot "70_template"
+    Write-Info "次世代のtreeに使う70_templateをコピーします。"
+    Copy-MissingDirectoryContents -SourceDir $TemplateDir -DestinationDir $projectTemplateDir
+
+    $projectScriptDir = Join-Path $ProjectRoot "77_script"
+    Write-Info "プロジェクト単体で実行できるよう77_scriptをコピーします。"
+    Copy-ActiveBookScript -DestinationDir $projectScriptDir
+    Copy-MissingDirectoryContents -SourceDir $ScriptDir -DestinationDir $projectScriptDir
+
+    Write-Success "移動後も単独で利用できるプロジェクトの初期構成を確認しました。"
 }
 
 function Get-ChapterPaths {
@@ -2502,7 +2580,7 @@ function Show-BookHelp {
     Write-Host "  config  Show active configuration files, filters, and unreferenced candidates"
     Write-Host "  help    Show this help"
     Write-Host "  master  Generate 10_manuscript\\99_master.md"
-    Write-Host "  tree    Copy missing project files from 70_template"
+    Write-Host "  tree    Copy missing project files, runtime scripts, and a local template"
     Write-Host "  Markdown中の fenced Div（::: pagebreak と :::）はPDF、DOCX、EPUBの改ページへ変換されます。前後は空行で区切ってください。"
     Write-Host "  epub    Generate EPUB"
     Write-Host "  pdf     Generate PDF"

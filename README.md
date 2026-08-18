@@ -1,4 +1,4 @@
-# Kindle出版ツールキット
+# Kindle制作ツールキット
 
 Markdown原稿からEPUB、PDF、DOCXを生成するためのPowerShellスクリプト、設定ファイル、スタイル、原稿テンプレートをまとめた制作キットの公開リポジトリです。
 
