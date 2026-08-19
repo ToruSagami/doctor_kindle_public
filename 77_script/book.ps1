@@ -13,7 +13,7 @@ param(
 
 Set-StrictMode -Version Latest
 $ErrorActionPreference = "Stop"
-$BookScriptVersion = "0.7.7"
+$BookScriptVersion = "0.7.8"
 
 # スクリプトは77_scriptへ置き、その親フォルダを配布元ルートとして扱う。
 # ProjectRootを省略した場合は、従来どおり配布元ルートを生成対象にする。
@@ -2293,19 +2293,10 @@ function Invoke-PandocExport {
         "--lua-filter=$brFilterFile"
     )
 
-    if ($Format -eq "pdf") {
-        $utf8WithoutBom = New-Object System.Text.UTF8Encoding($false)
-        [System.IO.File]::WriteAllText(
-            $aspectRatioHeaderFile,
-            "\AtBeginDocument{\setkeys{Gin}{keepaspectratio}}`n",
-            $utf8WithoutBom
-        )
-
-        $arguments += "--include-in-header=$aspectRatioHeaderFile"
-        $arguments += "--lua-filter=$tableFilterFile"
-        $arguments += "--lua-filter=$colophonFilterFile"
-        Write-Info "PDF画像の縦横比維持設定を追加しました。"
-    }
+if ($Format -eq "pdf") {
+    $arguments += "--lua-filter=$tableFilterFile"
+    $arguments += "--lua-filter=$colophonFilterFile"
+}
 
     Write-Info "70_template由来の設定ファイルを使用します: $defaultsFile"
 
