@@ -13,7 +13,7 @@ param(
 
 Set-StrictMode -Version Latest
 $ErrorActionPreference = "Stop"
-$BookScriptVersion = "0.7.8"
+$BookScriptVersion = "0.7.9"
 
 # スクリプトは77_scriptへ置き、その親フォルダを配布元ルートとして扱う。
 # ProjectRootを省略した場合は、従来どおり配布元ルートを生成対象にする。
@@ -174,7 +174,7 @@ function Write-ExternalCommandOutput {
     )
 }
 
-function Ensure-Directories {
+function Initialize-Directories {
     $directories = @(
         $ManuscriptDir,
         $ConfigDir,
@@ -1179,7 +1179,7 @@ function Get-NormalizedMarkdownForMerge {
 }
 
 function Update-Master {
-    Ensure-Directories
+    Initialize-Directories
     Assert-ChapterFiles
 
     Write-Info "章ファイルを結合しています。"
@@ -1893,7 +1893,7 @@ function Convert-MermaidBlocksForExport {
 
 function Test-Environment {
     Write-Info ("実行中のbook.ps1: version {0} / {1}" -f $BookScriptVersion, $PSCommandPath)
-    Ensure-Directories
+    Initialize-Directories
     Assert-ChapterFiles
 
     Write-Info "原稿ファイルを確認しました。"
@@ -2266,7 +2266,6 @@ function Invoke-PandocExport {
 
     $outputFile = Join-Path $PublishDir "$OutputBaseName.$Format"
     $defaultsFile = Join-Path $ConfigDir "$Format.yaml"
-    $aspectRatioHeaderFile = Join-Path $WorkDir "book-image-aspect-ratio.tex"
 
     $brFilterFile = Join-Path $StyleDir "br.lua"
     $tableFilterFile = Join-Path $StyleDir "table.lua"
@@ -2389,7 +2388,7 @@ function Write-ConfigurationItem {
 }
 
 function Show-BookConfiguration {
-    Ensure-Directories
+    Initialize-Directories
 
     $epubDefaults = Join-Path $ConfigDir "epub.yaml"
     $pdfDefaults = Join-Path $ConfigDir "pdf.yaml"
@@ -2582,7 +2581,7 @@ function Show-BookHelp {
 
 function Clear-GeneratedFiles {
     Assert-SafeProjectRoot
-    Ensure-Directories
+    Initialize-Directories
 
     $generatedFiles = @(
         $MasterFile,
@@ -2624,7 +2623,7 @@ try {
 
     switch ($Task) {
         "setup" {
-            Ensure-Directories
+            Initialize-Directories
             Update-Master
             Write-Success "初期設定が完了しました。"
         }

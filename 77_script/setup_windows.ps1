@@ -234,7 +234,10 @@ PowerShellを開き直して再実行してください。
     & winget --version
 }
 
-function Refresh-ProcessPath {
+function Update-ProcessPath {
+    [CmdletBinding()]
+    param()
+
     $machinePath = [Environment]::GetEnvironmentVariable("Path", "Machine")
     $userPath = [Environment]::GetEnvironmentVariable("Path", "User")
 
@@ -276,7 +279,7 @@ function Find-CommandPath {
         return $command.Source
     }
 
-    Refresh-ProcessPath
+    Update-ProcessPath
 
     $command = Get-Command $CommandName -ErrorAction SilentlyContinue
     if ($null -ne $command) {
@@ -403,7 +406,7 @@ PowerShellまたはVS Codeを閉じて開き直した後、次を実行してく
         throw ("Mermaid CLIのインストールに失敗しました。終了コード: {0}" -f $LASTEXITCODE)
     }
 
-    Refresh-ProcessPath
+    Update-ProcessPath
     $mmdcPath = Find-CommandPath -CommandName "mmdc" -FallbackPaths $mmdcFallbacks
 
     if ([string]::IsNullOrWhiteSpace($mmdcPath)) {
@@ -622,7 +625,7 @@ try {
         "mermaid" {
             Assert-WinGet
             Install-PackageSet -Packages $MermaidPackages
-            Refresh-ProcessPath
+            Update-ProcessPath
             Install-MermaidCli
             Test-Commands -Packages $MermaidPackages -IncludeMermaidCommands
         }
@@ -636,7 +639,7 @@ try {
         "all" {
             Assert-WinGet
             Install-PackageSet -Packages $AllWingetPackages
-            Refresh-ProcessPath
+            Update-ProcessPath
             Install-MermaidCli
             Test-Commands -Packages $AllWingetPackages -IncludeMermaidCommands
         }
@@ -644,14 +647,14 @@ try {
         "import" {
             Assert-WinGet
             Import-Packages
-            Refresh-ProcessPath
+            Update-ProcessPath
             Install-MermaidCli
             Test-Commands -Packages $AllWingetPackages -IncludeMermaidCommands
         }
 
         "check" {
             Assert-WinGet
-            Refresh-ProcessPath
+            Update-ProcessPath
             Test-Commands -Packages $AllWingetPackages -IncludeMermaidCommands
         }
 
