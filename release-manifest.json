@@ -1,11 +1,11 @@
 {
   "schema_version": 1,
-  "toolkit_version": "0.7.7",
-  "tag": "v0.7.7",
-  "generated_at": "2026-08-19T04:21:47.7650888Z",
+  "toolkit_version": "0.7.8",
+  "tag": "v0.7.8",
+  "generated_at": "2026-08-19T05:52:03.5671635Z",
   "git": {
     "branch": "main",
-    "head_commit": "54d315d01fa69ce363e7b79a954ae74c1a6c40f1",
+    "head_commit": "1cc6f3149c91fb6afbe5118fc77479e50bf7f207",
     "origin": "https://github.com/ToruSagami/doctor_kindle_public.git"
   },
   "files": [
@@ -18,10 +18,10 @@
     },
     {
       "path": "77_script/book.ps1",
-      "sha256": "f852433b8f1c906a4e6ad4195087ca7f076b7af83392b3d5284a7af7d5f5f6a4",
-      "size_bytes": 100617,
-      "last_commit": "54d315d01fa69ce363e7b79a954ae74c1a6c40f1",
-      "last_commit_at": "2026-08-19T13:21:32+09:00"
+      "sha256": "67857d936075c0d9eb96b4dcea1f35cc9ccfedc93b51c0b9c7f6b7334c5d9fb5",
+      "size_bytes": 100195,
+      "last_commit": "1cc6f3149c91fb6afbe5118fc77479e50bf7f207",
+      "last_commit_at": "2026-08-19T14:51:21+09:00"
     },
     {
       "path": "77_script/pdfcover.ps1",
@@ -130,10 +130,10 @@
     },
     {
       "path": "VERSION",
-      "sha256": "f7506507e062f995f2f8ca74f25856bb8c5c7b47626110de9562e058a0d9be3c",
+      "sha256": "67f8123db781331b1cea9bf1cbc985b722107b7d1aa4cef3a511ead5d2d9aa0b",
       "size_bytes": 5,
-      "last_commit": null,
-      "last_commit_at": null
+      "last_commit": "619585cc3be73668c53c8fa5462ea537f3b515e8",
+      "last_commit_at": "2026-08-19T13:22:07+09:00"
     }
   ],
   "notes": [
