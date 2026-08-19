@@ -13,7 +13,7 @@ param(
 
 Set-StrictMode -Version Latest
 $ErrorActionPreference = "Stop"
-$BookScriptVersion = "0.7.6"
+$BookScriptVersion = "0.7.7"
 
 # スクリプトは77_scriptへ置き、その親フォルダを配布元ルートとして扱う。
 # ProjectRootを省略した場合は、従来どおり配布元ルートを生成対象にする。
