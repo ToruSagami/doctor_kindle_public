@@ -10,6 +10,10 @@
 !/README.md
 !/THIRD_PARTY_NOTICES.md
 
+# ルート直下のバージョン管理
+!VERSION
+!release-manifest.json
+
 # tree.txtは公開しない
 /tree.txt
 
@@ -136,7 +140,5 @@ cache/
 *.synctex.gz
 *.toc
 
-00_example/50_config/sync.ffs_db
-77_script/book_0.7.5.ps1
-
-77_script\sync.ffs_db
+# FreeFileSync
+sync.ffs_db
