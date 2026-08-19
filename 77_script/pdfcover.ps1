@@ -126,7 +126,7 @@ function Assert-SafeProjectRoot {
     }
 }
 
-function Ensure-Directory {
+function Initialize-Directory {
     param([Parameter(Mandatory)][string]$Path)
     if (-not (Test-Path -LiteralPath $Path)) {
         New-Item -ItemType Directory -Path $Path -Force | Out-Null
@@ -144,7 +144,7 @@ function Write-Log {
 
 function Start-RunLog {
     param([Parameter(Mandatory)][string]$Mode)
-    Ensure-Directory -Path $WorkDir
+    Initialize-Directory -Path $WorkDir
     $stamp = Get-Date -Format 'yyyyMMdd_HHmmss'
     $script:RunningLog = Join-Path $WorkDir "${CommandName}_${Mode}_running_${stamp}.log"
     Start-Transcript -Path $script:RunningLog -Force | Out-Null
@@ -255,7 +255,7 @@ function Expand-TemplateZip {
     if (Test-Path -LiteralPath $Destination) {
         Remove-Item -LiteralPath $Destination -Recurse -Force
     }
-    Ensure-Directory -Path $Destination
+    Initialize-Directory -Path $Destination
     Expand-Archive -LiteralPath $Zip.FullName -DestinationPath $Destination -Force
 }
 
@@ -289,7 +289,7 @@ function Select-TemplatePng {
     throw "テンプレートPNGを一意に選択できませんでした。候補:`n$names"
 }
 
-function Ensure-LandscapeTemplate {
+function Initialize-LandscapeTemplate {
     param(
         [Parameter(Mandatory)][string]$InputPath,
         [Parameter(Mandatory)][string]$OutputPath
@@ -379,12 +379,12 @@ function Convert-TemplateToOutputDpi {
 function Get-TrimSizeFromName {
     param([Parameter(Mandatory)][string]$Name)
 
-    $matches = [regex]::Matches(
+    $foundMatches = [regex]::Matches(
         $Name,
         '(?<!\d)(\d+(?:\.\d+)?)\s*[xX×]\s*(\d+(?:\.\d+)?)(?!\d)'
     )
 
-    foreach ($match in $matches) {
+    foreach ($match in $foundMatches) {
         $width = [double]::Parse(
             $match.Groups[1].Value,
             [System.Globalization.CultureInfo]::InvariantCulture
@@ -598,9 +598,9 @@ if ($Command -eq 'help') {
 }
 
 Assert-SafeProjectRoot
-Ensure-Directory -Path $PublishDir
-Ensure-Directory -Path $WorkDir
-Ensure-Directory -Path $ArchiveDir
+Initialize-Directory -Path $PublishDir
+Initialize-Directory -Path $WorkDir
+Initialize-Directory -Path $ArchiveDir
 $mode = $Command
 $stamp = Get-Date -Format 'yyyyMMdd_HHmmss'
 $extractDir = Join-Path $WorkDir "pdfcover_extract_${stamp}"
@@ -642,7 +642,7 @@ try {
 
     $templatePng = Select-TemplatePng -ExtractDir $extractDir
     Write-Log INFO "Selected template PNG: $($templatePng.FullName)"
-    $sourceTemplate = Ensure-LandscapeTemplate -InputPath $templatePng.FullName -OutputPath $normalizedTemplate
+    $sourceTemplate = Initialize-LandscapeTemplate -InputPath $templatePng.FullName -OutputPath $normalizedTemplate
     $templateDpi = Resolve-TemplateDpi -TemplatePath $sourceTemplate.Path
     $outputDpi = $TargetOutputDpi
     $template = Convert-TemplateToOutputDpi -InputPath $sourceTemplate.Path -InputDpi $templateDpi -OutputDpi $outputDpi -OutputPath $outputTemplate
