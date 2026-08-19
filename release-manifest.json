@@ -1,11 +1,11 @@
 {
   "schema_version": 1,
-  "toolkit_version": "0.7.8",
-  "tag": "v0.7.8",
-  "generated_at": "2026-08-19T05:52:03.5671635Z",
+  "toolkit_version": "0.7.9",
+  "tag": "v0.7.9",
+  "generated_at": "2026-08-19T09:55:00.8117378Z",
   "git": {
     "branch": "main",
-    "head_commit": "1cc6f3149c91fb6afbe5118fc77479e50bf7f207",
+    "head_commit": "519e14661cf2a433800dbc265561842b4572609f",
     "origin": "https://github.com/ToruSagami/doctor_kindle_public.git"
   },
   "files": [
@@ -18,10 +18,10 @@
     },
     {
       "path": "77_script/book.ps1",
-      "sha256": "67857d936075c0d9eb96b4dcea1f35cc9ccfedc93b51c0b9c7f6b7334c5d9fb5",
-      "size_bytes": 100195,
-      "last_commit": "1cc6f3149c91fb6afbe5118fc77479e50bf7f207",
-      "last_commit_at": "2026-08-19T14:51:21+09:00"
+      "sha256": "5b7b0f5c539f1535a722896b999629b9cb192393a0b5414a8a74013917cef990",
+      "size_bytes": 100140,
+      "last_commit": "519e14661cf2a433800dbc265561842b4572609f",
+      "last_commit_at": "2026-08-19T18:51:48+09:00"
     },
     {
       "path": "77_script/pdfcover.ps1",
@@ -39,10 +39,10 @@
     },
     {
       "path": "77_script/setup_windows.ps1",
-      "sha256": "7d29acc6e58be745df59eaaf44090c6b3a6a4d1d349d6c07327624e102a7f809",
-      "size_bytes": 20570,
-      "last_commit": "20ecd30fdbd0ce2eaaa2019f3bcabda634e9aab3",
-      "last_commit_at": "2026-08-18T23:10:11+09:00"
+      "sha256": "b2762f6e5ec7f67ef20d6e286792cbae84afda272400c61f0b0725d9e091e3f6",
+      "size_bytes": 20598,
+      "last_commit": "519e14661cf2a433800dbc265561842b4572609f",
+      "last_commit_at": "2026-08-19T18:51:48+09:00"
     },
     {
       "path": "70_template/50_config/docx.yaml",
@@ -123,17 +123,17 @@
     },
     {
       "path": "70_template/60_style/table.lua",
-      "sha256": "ceaa5f976c4cab4ceaed54d2a156cadfcbc0ac97cd438fb1df304fdb0ecf3de8",
-      "size_bytes": 2464,
-      "last_commit": "a45402ef47dd3688f9b462bf9c3e19cc26e5e8f9",
-      "last_commit_at": "2026-08-14T00:25:29+09:00"
+      "sha256": "762697b25871f129a9c8741ce92ee4ce318a4cc080a563c94ed50a5106eb0855",
+      "size_bytes": 500,
+      "last_commit": "519e14661cf2a433800dbc265561842b4572609f",
+      "last_commit_at": "2026-08-19T18:51:48+09:00"
     },
     {
       "path": "VERSION",
-      "sha256": "67f8123db781331b1cea9bf1cbc985b722107b7d1aa4cef3a511ead5d2d9aa0b",
+      "sha256": "32d034904b19e2a65c29507be008a221362271059861a9e234935820ab31fae4",
       "size_bytes": 5,
-      "last_commit": "619585cc3be73668c53c8fa5462ea537f3b515e8",
-      "last_commit_at": "2026-08-19T13:22:07+09:00"
+      "last_commit": "220789dd899ae151637a1cd85a17f33299f623a6",
+      "last_commit_at": "2026-08-19T15:59:09+09:00"
     }
   ],
   "notes": [
