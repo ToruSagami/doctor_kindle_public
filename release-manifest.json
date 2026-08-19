@@ -1,0 +1,143 @@
+{
+  "schema_version": 1,
+  "toolkit_version": "0.7.7",
+  "tag": "v0.7.7",
+  "generated_at": "2026-08-19T04:21:47.7650888Z",
+  "git": {
+    "branch": "main",
+    "head_commit": "54d315d01fa69ce363e7b79a954ae74c1a6c40f1",
+    "origin": "https://github.com/ToruSagami/doctor_kindle_public.git"
+  },
+  "files": [
+    {
+      "path": "77_script/apply_revised_files.ps1",
+      "sha256": "dea87e43014529da2a2fd0e50393cf87b54faa0c170a56d2e44b8187acf8fe92",
+      "size_bytes": 3950,
+      "last_commit": "a45402ef47dd3688f9b462bf9c3e19cc26e5e8f9",
+      "last_commit_at": "2026-08-14T00:25:29+09:00"
+    },
+    {
+      "path": "77_script/book.ps1",
+      "sha256": "f852433b8f1c906a4e6ad4195087ca7f076b7af83392b3d5284a7af7d5f5f6a4",
+      "size_bytes": 100617,
+      "last_commit": "54d315d01fa69ce363e7b79a954ae74c1a6c40f1",
+      "last_commit_at": "2026-08-19T13:21:32+09:00"
+    },
+    {
+      "path": "77_script/pdfcover.ps1",
+      "sha256": "22a17179b8ca51c2039e3ae8677a103e99305f32c08f64bbdd648e48dc1b73be",
+      "size_bytes": 25779,
+      "last_commit": "a45402ef47dd3688f9b462bf9c3e19cc26e5e8f9",
+      "last_commit_at": "2026-08-14T00:25:29+09:00"
+    },
+    {
+      "path": "77_script/reset_settings.ps1",
+      "sha256": "932ceab857152c72dbeecd5683d9f51b207ef8d7397382e4f6de10282b73cd38",
+      "size_bytes": 5981,
+      "last_commit": "a45402ef47dd3688f9b462bf9c3e19cc26e5e8f9",
+      "last_commit_at": "2026-08-14T00:25:29+09:00"
+    },
+    {
+      "path": "77_script/setup_windows.ps1",
+      "sha256": "7d29acc6e58be745df59eaaf44090c6b3a6a4d1d349d6c07327624e102a7f809",
+      "size_bytes": 20570,
+      "last_commit": "20ecd30fdbd0ce2eaaa2019f3bcabda634e9aab3",
+      "last_commit_at": "2026-08-18T23:10:11+09:00"
+    },
+    {
+      "path": "70_template/50_config/docx.yaml",
+      "sha256": "cc6f6939e2bcfd5268a4d70f83555d2627a8c70fa7788cdaedfaef52ec3e31e2",
+      "size_bytes": 103,
+      "last_commit": "a45402ef47dd3688f9b462bf9c3e19cc26e5e8f9",
+      "last_commit_at": "2026-08-14T00:25:29+09:00"
+    },
+    {
+      "path": "70_template/50_config/epub.yaml",
+      "sha256": "0484afab7937436f96d682d621a4b51b258e149c5b86e99311315c84eac560a7",
+      "size_bytes": 104,
+      "last_commit": "a45402ef47dd3688f9b462bf9c3e19cc26e5e8f9",
+      "last_commit_at": "2026-08-14T00:25:29+09:00"
+    },
+    {
+      "path": "70_template/50_config/metadata.yaml",
+      "sha256": "16edba8522d14ea1947c36aa943d9ad266b9c306e61215228654d62bbd2c491f",
+      "size_bytes": 377,
+      "last_commit": "a45402ef47dd3688f9b462bf9c3e19cc26e5e8f9",
+      "last_commit_at": "2026-08-14T00:25:29+09:00"
+    },
+    {
+      "path": "70_template/50_config/pdf.yaml",
+      "sha256": "4a22889de1ed7e3220022373cc2678179d3d84937e3bc1496d0c7b4091f184e0",
+      "size_bytes": 466,
+      "last_commit": "a45402ef47dd3688f9b462bf9c3e19cc26e5e8f9",
+      "last_commit_at": "2026-08-14T00:25:29+09:00"
+    },
+    {
+      "path": "70_template/60_style/br.lua",
+      "sha256": "41799b49b9ce6883b0c3e90909bbf51e5cd884b19b0379758c53de4864f01f2f",
+      "size_bytes": 171,
+      "last_commit": "a45402ef47dd3688f9b462bf9c3e19cc26e5e8f9",
+      "last_commit_at": "2026-08-14T00:25:29+09:00"
+    },
+    {
+      "path": "70_template/60_style/code-plain.lua",
+      "sha256": "745babd1ab68e30e8b829e3aa1239e854c906823b455828c3d5e3dfd16567b46",
+      "size_bytes": 630,
+      "last_commit": "a45402ef47dd3688f9b462bf9c3e19cc26e5e8f9",
+      "last_commit_at": "2026-08-14T00:25:29+09:00"
+    },
+    {
+      "path": "70_template/60_style/colophon.lua",
+      "sha256": "0739a6fef59339f3ab9be6cc8bf860f5ff3f1d29efd6ce3dc2db849f97f1f3a2",
+      "size_bytes": 967,
+      "last_commit": "a45402ef47dd3688f9b462bf9c3e19cc26e5e8f9",
+      "last_commit_at": "2026-08-14T00:25:29+09:00"
+    },
+    {
+      "path": "70_template/60_style/heading-numbering.lua",
+      "sha256": "89c5afd85d97f94d2f3d30483af286d1083067c04e2802d953f5ef51c0245fec",
+      "size_bytes": 1310,
+      "last_commit": "a45402ef47dd3688f9b462bf9c3e19cc26e5e8f9",
+      "last_commit_at": "2026-08-14T00:25:29+09:00"
+    },
+    {
+      "path": "70_template/60_style/pagebreak.lua",
+      "sha256": "e747096ed928001ea4c460b89c732b714345d9ad1c96d5b77653f75156577ca9",
+      "size_bytes": 1057,
+      "last_commit": "a45402ef47dd3688f9b462bf9c3e19cc26e5e8f9",
+      "last_commit_at": "2026-08-14T00:25:29+09:00"
+    },
+    {
+      "path": "70_template/60_style/pdf-header.tex",
+      "sha256": "a61f0d46188e12a07fe556b8f6a4fbf503e1bba8fdb203019731ea6ae1f6bd95",
+      "size_bytes": 6414,
+      "last_commit": "47d8ea3963e0353214012a02e754140c010bcade",
+      "last_commit_at": "2026-08-17T18:35:08+09:00"
+    },
+    {
+      "path": "70_template/60_style/table-caption.lua",
+      "sha256": "58ec38da8fb2f228c69e04d6f34a9b92f84887ab98d99f1306516134fd5b451a",
+      "size_bytes": 1014,
+      "last_commit": "a45402ef47dd3688f9b462bf9c3e19cc26e5e8f9",
+      "last_commit_at": "2026-08-14T00:25:29+09:00"
+    },
+    {
+      "path": "70_template/60_style/table.lua",
+      "sha256": "ceaa5f976c4cab4ceaed54d2a156cadfcbc0ac97cd438fb1df304fdb0ecf3de8",
+      "size_bytes": 2464,
+      "last_commit": "a45402ef47dd3688f9b462bf9c3e19cc26e5e8f9",
+      "last_commit_at": "2026-08-14T00:25:29+09:00"
+    },
+    {
+      "path": "VERSION",
+      "sha256": "f7506507e062f995f2f8ca74f25856bb8c5c7b47626110de9562e058a0d9be3c",
+      "size_bytes": 5,
+      "last_commit": null,
+      "last_commit_at": null
+    }
+  ],
+  "notes": [
+    "release-manifest.json自身は自己参照になるためfilesへ含めません。",
+    "VERSIONは生成直後のため、初回生成時のlast_commitとlast_commit_atはnullになります。"
+  ]
+}
