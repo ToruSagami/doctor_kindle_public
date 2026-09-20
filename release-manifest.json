@@ -1,11 +1,11 @@
 {
   "schema_version": 1,
-  "toolkit_version": "0.7.10",
-  "tag": "v0.7.10",
-  "generated_at": "2026-09-20T11:19:28.2174910Z",
+  "toolkit_version": "0.7.11",
+  "tag": "v0.7.11",
+  "generated_at": "2026-09-20T11:39:54.4160230Z",
   "git": {
     "branch": "main",
-    "head_commit": "2c129812858c158b296897390c805f5ef16b7838",
+    "head_commit": "9f6e3d48ad6bb707f83625b4332c6c1f43e879bf",
     "origin": "https://github.com/ToruSagami/doctor_kindle_public.git"
   },
   "files": [
@@ -18,7 +18,7 @@
     },
     {
       "path": "77_script/book.ps1",
-      "sha256": "4cb4be4bcdb4bf32e6acbf0cad7ea0c4458156d7c0399fae6819590e34a2c678",
+      "sha256": "9f0850297e2672bf5899c4531badcc6d4e04ac98ef5b95236a0c22cb5c648638",
       "size_bytes": 100141,
       "last_commit": "d730670925db20e3796ab6563d85e995fb076b70",
       "last_commit_at": "2026-09-20T20:15:20+09:00"
@@ -130,7 +130,7 @@
     },
     {
       "path": "VERSION",
-      "sha256": "17d3e93626d72ba7a344b8252dca6f6486848836d77d4f14b3cec26e5fce13b1",
+      "sha256": "c774589705a0fa7a3edeae640c1bbb46d5165497ad7eded49af4dd9dbe022168",
       "size_bytes": 6,
       "last_commit": "1ff8f6085a3ba352738933725ce100418204945f",
       "last_commit_at": "2026-09-20T20:14:01+09:00"
@@ -138,6 +138,8 @@
   ],
   "notes": [
     "release-manifest.json自身は自己参照になるためfilesへ含めません。",
-    "VERSIONは生成直後のため、初回生成時のlast_commitとlast_commit_atはnullになります。"
+    "VERSIONを版番号の唯一の正本として扱います。",
+    "book.ps1のBookScriptVersionはVERSIONから自動更新されます。",
+    "last_commitとlast_commit_atは直近のcommit時点の情報です。"
   ]
 }
