@@ -6,7 +6,7 @@
   KDPの表紙テンプレートZIPと電子書籍用表紙画像から、
   ペーパーバック用の表紙PNGとPDFを生成します。
 .VERSION
-  0.2.3
+  0.2.4
 #>
 
 [CmdletBinding()]
