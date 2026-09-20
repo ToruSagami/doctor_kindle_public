@@ -1,11 +1,11 @@
 {
   "schema_version": 1,
-  "toolkit_version": "0.7.9",
-  "tag": "v0.7.9",
-  "generated_at": "2026-08-19T09:55:00.8117378Z",
+  "toolkit_version": "0.7.10",
+  "tag": "v0.7.10",
+  "generated_at": "2026-09-20T11:16:16.5490883Z",
   "git": {
     "branch": "main",
-    "head_commit": "519e14661cf2a433800dbc265561842b4572609f",
+    "head_commit": "d730670925db20e3796ab6563d85e995fb076b70",
     "origin": "https://github.com/ToruSagami/doctor_kindle_public.git"
   },
   "files": [
@@ -18,17 +18,17 @@
     },
     {
       "path": "77_script/book.ps1",
-      "sha256": "5b7b0f5c539f1535a722896b999629b9cb192393a0b5414a8a74013917cef990",
-      "size_bytes": 100140,
-      "last_commit": "519e14661cf2a433800dbc265561842b4572609f",
-      "last_commit_at": "2026-08-19T18:51:48+09:00"
+      "sha256": "4cb4be4bcdb4bf32e6acbf0cad7ea0c4458156d7c0399fae6819590e34a2c678",
+      "size_bytes": 100141,
+      "last_commit": "d730670925db20e3796ab6563d85e995fb076b70",
+      "last_commit_at": "2026-09-20T20:15:20+09:00"
     },
     {
       "path": "77_script/pdfcover.ps1",
-      "sha256": "22a17179b8ca51c2039e3ae8677a103e99305f32c08f64bbdd648e48dc1b73be",
-      "size_bytes": 25779,
-      "last_commit": "a45402ef47dd3688f9b462bf9c3e19cc26e5e8f9",
-      "last_commit_at": "2026-08-14T00:25:29+09:00"
+      "sha256": "8f0185d2a8bfeace30cd0c38bb4e7dc641ba29f2917e8d9fb7a5ea62945a6432",
+      "size_bytes": 25821,
+      "last_commit": "77426439b19d28f3a1675f82f804645eee3f0642",
+      "last_commit_at": "2026-09-20T20:09:57+09:00"
     },
     {
       "path": "77_script/reset_settings.ps1",
@@ -130,10 +130,10 @@
     },
     {
       "path": "VERSION",
-      "sha256": "32d034904b19e2a65c29507be008a221362271059861a9e234935820ab31fae4",
-      "size_bytes": 5,
-      "last_commit": "220789dd899ae151637a1cd85a17f33299f623a6",
-      "last_commit_at": "2026-08-19T15:59:09+09:00"
+      "sha256": "17d3e93626d72ba7a344b8252dca6f6486848836d77d4f14b3cec26e5fce13b1",
+      "size_bytes": 6,
+      "last_commit": "1ff8f6085a3ba352738933725ce100418204945f",
+      "last_commit_at": "2026-09-20T20:14:01+09:00"
     }
   ],
   "notes": [
