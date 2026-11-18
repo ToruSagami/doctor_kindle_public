@@ -87,6 +87,9 @@
 !/77_script/
 !/77_script/**
 
+# プロンプトも出しておく
+!/80_prompt/
+
 # 旧版スクリプト
 /77_script/obsolete/
 
@@ -142,3 +145,4 @@ cache/
 
 # FreeFileSync
 sync.ffs_db
+.vscode/settings.json
